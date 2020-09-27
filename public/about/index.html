@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.75.1" />
+
+
+<title>R Mark Down Code - Matthew&#39;s Website</title>
+<meta property="og:title" content="R Mark Down Code - Matthew&#39;s Website">
+
+
+  <link href='../favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="../css/fonts.css" media="all">
+<link rel="stylesheet" href="../css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="../" class="nav-logo">
+    <img src="../images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="https://github.com/mcaringi/FirstBlogPost">GitHub</a></li>
+    
+    <li><a href="../about/">R Markdown Code</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+
+    <h1 class="article-title">R Mark Down Code</h1>
+
+    
+
+    <div class="article-content">
+      <p>Listed below is the R Markdown code for the blog post &ldquo;Outbreaks Within Toronto Healthcare Insitutions in 2020&rdquo;.</p>
+<pre><code class="language-{r" data-lang="{r">knitr::opts_chunk$set(collapse = TRUE)
+install.packages(&quot;opendatatoronto&quot;)
+install.packages(&quot;ggplot2&quot;)
+library(dplyr)
+</code></pre><p>Abstract</p>
+<p>This is a data analysis of the outbreaks in Toronto health institutions within 2020 using ggplot2 (@citeggplot2) and tidyverse (@citetidyverse) within R Markdown (JJ Allaire (2020)). An overview of the paper includes an outbreak distribution seen within healthcare settings which shows majority of reported outbreaks occurring within long-term care homes raising concerns about the infection prevention and control procedures within these facilities. When the dataset was filtered to examine only COVID-19 outbreaks within all institutions, the trend of outbreak occurrence date displays the pattern of the COVID-19 pandemic. Further work includes the investigation of the outbreak magnitude within the institutions as well as examining the social and economic impact in Toronto during the COVID-19 pandemic.</p>
+<p>Introduction</p>
+<p>Within scope of this paper, the data set &lsquo;Outbreaks in Toronto Health Institutions 2020&rsquo; is analyzed for two purposes; to gain insight on outbreak occurrence in different healthcare settings, and to obtain an outline of the 2020 COVID-19 pandemic. Two variables in the data set are focused on to address these purposes.</p>
+<p>The first variable in question involves the outbreak setting. A bar graph was created to visually observe the difference in the the amount of institutions in outbreak separated by the type of setting of the facility. This graph demonstrates the large number of long-term care homes in outbreak compared to retirement homes and hospitals. The second variable in question involves the date of COVID-19 outbreak declared within all institutions. A plot graph is used to show the frequency of facilities in a COVID-19 outbreak during the 2020 COVID-19 pandemic. The graph visualizes the trend of the pandemic showing more institutions going into outbreak during April to June suggesting the first wave. Forecasting of this graph can also suggest a possible second wave of the pandemic due to more outbreaks occurring after that first wave.</p>
+<p>Enlisted below in this paper consist of the Outbreaks in Toronto Healthcare Institutions 2020 data set, Outbreak Distribution in Healthcare Institutions bar graph, and Pandemic Tracking of COVID-19 plot graph. The discussion investigates the importance of viewing the result of different facilities' IPAC procedures and using the data of a certain disease outbreak in institutions to view the trend of a pandemic. Weaknesses include the uncertainty of the outbreaks' magnitude in the facilities which may contribute to a misrepresentation of a institute&rsquo;s IPAC procedure. Thus, further work is needed on individual cases to fully understand the effectiveness of a facility&rsquo;s ability to contain a disease outbreak.</p>
+<p>Data</p>
+<p>The opendatatoronto set is the Outbreaks in Toronto Healthcare Institutions (@citeopendatatoronto).</p>
+<pre><code class="language-{r}" data-lang="{r}">library(opendatatoronto)
+Outbreaks_in_Toronto_Healthcare_Institutions_2020 &lt;- list_package_resources(&quot;https://open.toronto.ca/dataset/outbreaks-in-toronto-healthcare-institutions/&quot;) %&gt;%
+  filter(name == &quot;Outbreaks in Toronto Healthcare Institutions-2020&quot;) %&gt;%
+  get_resource()
+head(Outbreaks_in_Toronto_Healthcare_Institutions_2020)
+</code></pre><p>Viewing the most recent data resource from 2020, one can observe the types of outbreaks within Toronto healthcare institutions. In this observational study, the variables include the institution name &amp; address, outbreak setting, type of outbreak, causative agent, date of outbreak began, date declared over, and the active status of outbreak. It is with no surprise that during the 2020 COVID-19 pandemic, majority of the cases are respiratory outbreaks with the causative agent being COVID-19. Additionally, the data set also includes the outbreak began and declared over dates which can assist one in viewing the waves and peaks of the pandemic.</p>
+<p>Graphs</p>
+<pre><code class="language-{r}" data-lang="{r}">library(ggplot2)
+Outbreaks_in_Toronto_Healthcare_Institutions_2020 %&gt;%
+  ggplot(aes(x = `Outbreak Setting`)) +
+  geom_bar() +
+  labs(y = &quot;Number of Outbreaks&quot;,
+    title = &quot;Outbreak Distribution of Healthcare Institutions&quot;,
+       caption = &quot;Gelfand (2020)&quot;)
+</code></pre><p>The categorical variable focused in this bar graph is the outbreak setting. Illustrated in the graph, the institutions are categorized by outbreak setting and recorded on how many outbreaks that category has. Within scope of this variable, one can observe that Long-term Care Homes consisted majority of the outbreaks followed by Retirement Homes. When these two categories, LTCH and Retirement Homes, are in comparison to Hospital (acute &amp; chronic) care settings, speculation about the institutions' infection prevention and control (IPAC) procedures become questionable. Therefore, the observations in this graph conclude that outbreaks occur more often in LTCH which could be the result of improper IPAC methods.</p>
+<pre><code class="language-{r}" data-lang="{r}">library(ggplot2)
+Outbreaks_in_Toronto_Healthcare_Institutions_2020 %&gt;%
+  filter(`Causative Agent - 1` == &quot;COVID-19&quot;) %&gt;%
+  ggplot(aes(x = `Date Outbreak Began`, y = `Outbreak Setting`)) +
+  geom_point() +
+  labs(y = &quot;Institution Name&quot;,
+    title = &quot;Pandemic Tracking of COVID-19&quot;,
+       caption = &quot;Gelfand (2020)&quot;)
+</code></pre><p>Within this plot graph, the tracking of the COVID-19 pandemic is based on the date that the Toronto healthcare institutions declared a COVID-19 outbreak. Seen in the graph, one can observe that most outbreaks occurred within the second quarter of the year (April to June) and have slowly diminished. Additionally, small amount institutions went into outbreak in late August to early September that can forecast a possible second wave to the COVID-19 pandemic. Thus, the analysis of the graph can provide information about the severity of the COVID-19 pandemic through the occurrence of outbreaks within healthcare institutions.</p>
+<p>Discussion</p>
+<p>In this paper, data on all outbreaks within Toronto healthcare facilities in 2020 were examined. It was seen that majority of the outbreaks occurred within LTCH compared to retirement homes &amp; hospitals. The importance of this observation was to view the effectiveness of the institute&rsquo;s IPAC regulations and procedures. Based on the data, it was inferred that LTCH could possibly have lower standards compared to hospitals. This is a concern because LTCH consist of elderly citizens with chronic medical conditions classifying them as high-risk individuals (Canada (2020)). Within outbreak situations, disease spreads more easily and more deadly with a population of high-risk individuals, thus importance is placed on the institute&rsquo;s IPAC procedures to contain the outbreak.</p>
+<p>One weakness about this paper is the unknown variable of the outbreak magnitude. During the COVID-19 pandemic, LTCH and Retirement home regulations state that these facilities need one case to declare outbreak (COVID-19 Directive). These conditions are unlike public hospitals which need two cases within a 14-day period to declare an outbreak (COVID-19 Outbreak). This difference is too small to be significant but should be noted. Referring to Graph 1: Outbreak Distribution in Healthcare Institutions, the number of institutions that declared outbreak were counted but the number of cases within each outbreak is unknown. In other words, although LTCH institutions contained more outbreaks, they didn&rsquo;t necessary contain more cases and the outbreaks could have been more mild when compared to hospitals. Some next steps may include analyzing data that pertains to COVID-19 cases within these healthcare institution outbreaks. This can be applied to further understand the severity of the outbreak within the institute to infer the quality of the facility&rsquo;s outbreak procedures and policies.</p>
+<p>Additionally, using the date that the institute&rsquo;s began their COVID-19 outbreak allows insight on the 2020 COVID-19 pandemic. Previously seen, the data entails the waves of the pandemic as well as allows future predictions to be made. The importance of this analysis allows the reader to track the pandemic without compiling extensive data on COVID-19 individuals, thus making the tracking simpler. Future steps could include relating the peaks and troughs of the pandemic to other data on social or economic factors that had impact Toronto during this time.</p>
+<p>References
+COVID-19 Outbreak Information at UHN.  <a href="https://www.uhn.ca/Covid19/Pages">https://www.uhn.ca/Covid19/Pages</a>    /Outbreak_Information.aspx.</p>
+<p>&ldquo;COVID-19 Directive #3 for Long-Term Care Homes under the &hellip;&rdquo; <a href="http://www.health.gov.on.ca/en/pro/programs/publichealth/coronavirus/docs/directives/LTCH_HPPA.pdf">http://www.health.gov.on.ca/en/pro/programs/publichealth/coronavirus/docs/directives/LTCH_HPPA.pdf</a>.</p>
+<p>Canada, Public Health Agency of. &ldquo;Government of Canada.&rdquo; (Factsheet) - Canada.ca. September 16, 2020.  <a href="https://www.canada.ca/en/public-health/services/publications/diseases-conditions/people-high-risk-for-severe-illness-covid-19.html">https://www.canada.ca/en/public-health/services/publications/diseases-conditions/people-high-risk-for-severe-illness-covid-19.html</a>.</p>
+<p>JJ Allaire and Yihui Xie and Jonathan McPherson and Javier Luraschi and
+Kevin Ushey and Aron Atkins and Hadley Wickham and Joe Cheng and
+Winston Chang and Richard Iannone (2020). rmarkdown: Dynamic Documents
+for R. R package version 2.3. URL <a href="https://rmarkdown.rstudio.com">https://rmarkdown.rstudio.com</a>.</p>
+<p>Yihui Xie and J.J. Allaire and Garrett Grolemund (2018). R Markdown:
+The Definitive Guide. Chapman and Hall/CRC. ISBN 9781138359338. URL
+<a href="https://bookdown.org/yihui/rmarkdown">https://bookdown.org/yihui/rmarkdown</a>.</p>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="../index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="../images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="../js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
